@@ -5,53 +5,51 @@ with open('input/day03.txt') as f:
     file = f.read().splitlines()
 
 def part1(input):
-
     n_chars = len(input[0])
-    values = ['9', '8', '7', '6', '5', '4', '3', '2','1']
+    active_bats = 2
+    values = ['9', '8', '7', '6', '5', '4', '3', '2', '1']
     joltage = 0
 
-    def check_first(bank):
+    def check_bank(bank, bat_nr, prev_index):
         for v in values:
-            for i, char in enumerate(bank[:n_chars - 1]):
+            for i, char in enumerate(bank[prev_index+1:n_chars - (active_bats - bat_nr) + 1]):
                 if char == v:
-                    return i, int(char)
-
-    def check_second(bank, first_index):
-        for v in values:
-            for char in bank[first_index+1:]:
-                if char == v:
-                    return int(char)
+                    return i + prev_index + 1, v
 
     for bank in input:
-        first_index, first_digit = check_first(bank)
-        second_digit = check_second(bank, first_index)
-        joltage += first_digit*10 + second_digit
+        prev_index = -1
+        digits = []
+        for bat_nr in range(active_bats):
+            prev_index, digit = check_bank(bank, bat_nr, prev_index)
+            digits.append(digit)
+
+        joltage += int(''.join(digits))
 
     answer1 = joltage
+
     return answer1
 
 
 def part2(input):
     n_chars = len(input[0])
+    active_bats = 12
     values = ['9', '8', '7', '6', '5', '4', '3', '2', '1']
     joltage = 0
 
-    def check_first(bank):
+    def check_bank(bank, bat_nr, prev_index):
         for v in values:
-            for i, char in enumerate(bank[:n_chars - 1]):
+            for i, char in enumerate(bank[prev_index + 1:n_chars - (active_bats - bat_nr) + 1]):
                 if char == v:
-                    return i, int(char)
-
-    def check_second(bank, first_index):
-        for v in values:
-            for char in bank[first_index + 1:]:
-                if char == v:
-                    return int(char)
+                    return i + prev_index + 1, v
 
     for bank in input:
-        first_index, first_digit = check_first(bank)
-        second_digit = check_second(bank, first_index)
-        joltage += first_digit * 10 + second_digit
+        prev_index = -1
+        digits = []
+        for bat_nr in range(active_bats):
+            prev_index, digit = check_bank(bank, bat_nr, prev_index)
+            digits.append(digit)
+
+        joltage += int(''.join(digits))
 
     answer2 = joltage
 
